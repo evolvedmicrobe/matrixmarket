@@ -12,13 +12,20 @@ system.time({res3 <- readMM_nigel2(fname)})
 rm(res3)
 # C++ atoi
 system.time({res4 <- readMM_nigel3(fname)})
-rm(res3)
+rm(res4)
+# C++ get/atoi
+system.time({res5 <- readMM_nigel4(fname)})
+rm(res5)
+
+# C++ buffer
+system.time({res6 <- readMM_nigel5(fname)})
+rm(res6)
 
 library(lineprof)
 lineprof({res <- readMM(fname)})
-g = lineprof({res3 <- readMM_nigel2(fname)})
+g = lineprof({res3 <- readMM_nigel4(fname)})
 g
 shine(g)
 for(i in 1:1000) {
-  res3 <- readMM_nigel3(fname)
+  res3 <- readMM_nigel4(fname)
 }

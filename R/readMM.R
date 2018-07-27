@@ -14,6 +14,16 @@ readMM_nigel3 <- function(fname) {
   new("dgTMatrix", Dim = c(data$nr, data$nc), i = data$i, j = data$j, x = data$val)
 }
 
+readMM_nigel4 <- function(fname) {
+  data = readMMcpp4(fname)
+  new("dgTMatrix", Dim = c(data$nr, data$nc), i = data$i, j = data$j, x = data$val)
+}
+
+readMM_nigel5 <- function(fname) {
+  data = readMMcpp5(fname)
+  new("dgTMatrix", Dim = c(data$nr, data$nc), i = data$i, j = data$j, x = data$val)
+}
+
 
 #' @export
 write_mm_matrix <- function(nrow, ncol, sparsity, fname) {

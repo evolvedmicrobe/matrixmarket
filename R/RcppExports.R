@@ -9,3 +9,7 @@ readMMcpp2 <- function(fname) {
     .Call(`_matrixmarket_readMMcpp2`, fname)
 }
 
+readMMcpp3 <- function(fname) {
+    .Call(`_matrixmarket_readMMcpp3`, fname)
+}
+

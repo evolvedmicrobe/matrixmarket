@@ -28,10 +28,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// readMMcpp3
+List readMMcpp3(std::string fname);
+RcppExport SEXP _matrixmarket_readMMcpp3(SEXP fnameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type fname(fnameSEXP);
+    rcpp_result_gen = Rcpp::wrap(readMMcpp3(fname));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_matrixmarket_readMMcpp", (DL_FUNC) &_matrixmarket_readMMcpp, 1},
     {"_matrixmarket_readMMcpp2", (DL_FUNC) &_matrixmarket_readMMcpp2, 1},
+    {"_matrixmarket_readMMcpp3", (DL_FUNC) &_matrixmarket_readMMcpp3, 1},
     {NULL, NULL, 0}
 };
 

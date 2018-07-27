@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <iostream> 
 #include <fstream>
+#include <istream>
 extern "C" {
   #include "mm_io.h"
 }
@@ -117,3 +118,64 @@ List readMMcpp2(std::string fname) {
   return 0;
 }
 
+
+// [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::export]]
+List readMMcpp3(std::string fname) {
+  int ret_code;
+  MM_typecode matcode;
+  FILE *f;
+  int M, N, nz;   
+  int i;
+  
+  if ((f = fopen(fname.c_str(), "r")) == NULL) 
+    Rcpp::stop("Could not open file.");
+  
+  if (mm_read_banner(f, &matcode) != 0)
+    Rcpp::stop("Could not process Matrix Market banner.\n");
+  
+  if (mm_is_complex(matcode))
+    Rcpp::stop("Unsupported Market Market type: [%s]\n", mm_typecode_to_str(matcode));
+  
+  /* find out size of sparse matrix .... */
+  
+  if ((ret_code = mm_read_mtx_crd_size(f, &M, &N, &nz)) !=0)
+    stop("Failed to read matrix size.");
+  
+  /* reseve memory for matrices */
+  IntegerVector I(nz);
+  IntegerVector J(nz);
+  NumericVector val(nz);
+  
+  fclose(f);
+  std::ifstream fs(fname);
+  std::string line;
+  fs.ignore(1000, '\n');
+  fs.ignore(1000, '\n');
+  
+  int cmax = 100;
+  char vals[cmax];
+  for (i=0; i<nz; i++)
+  {
+    //for(int j =0; j< 10; j++) {
+    //  Rcout << fs.get() << std::endl;
+    //}
+    fs.get(vals, cmax, ' ');
+    fs.ignore(1);
+    I[i] = atoi(vals);
+    fs.get(vals, cmax, ' ');
+    fs.ignore(1);
+    J[i] = atoi(vals);
+    fs.get(vals, cmax, '\n');
+    fs.ignore(1);
+    val[i] = atof(vals);
+    I[i]--;  /* adjust from 1-based to 0-based */
+    J[i]--;
+  }
+  fs.close();
+  return List::create(Named("nr") = M,
+                      Named("nc") = N,
+                      Named("i") = I,
+                      Named("j") = J,
+                      Named("val") = val);
+}
